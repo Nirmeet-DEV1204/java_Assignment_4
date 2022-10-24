@@ -1,45 +1,55 @@
 /*
     Assignment #4
-    {Your name here}
+    {Nirmeet Pansuriya}
 */
 
 $(function () {
     // your code here
-    getlocolsotreage();
-    var newLat ="";
-    var newLong ="";
-    function getLocation() {
+    var Lat ="";
+    var Long ="";
+    location();
+    
+    function calucateOrDisplay(){
+        var data = localStorage.getItem("location");
+        var data = data.split(",");
+        data[0] = data[0].replace("[","");
+        data[1] = data[1].replace("]","");
+        if(data[0]==null && data[1]==null)
+        {
+            var html=`<p>Your Location</p>
+            <p>Latitiude : ${Lat}</p>
+            <p>Longitude : ${Long}</p>
+            `
+            var dataArr = [];  
+            dataArr.push(Lat);
+            dataArr.push(Long);
+            localStorage.setItem('location', JSON.stringify(dataArr)); 
+            $('#locationhere').html(html);
+
+        }
+        else{
+            var dis = calcDistanceBetweenPoints(data[0],data[1],Long,Long);
+            var html=`Dsiatnce is = ${dis}`
+            $('#locationhere').html(html);
+
+        }
+    }
+   
+    
+    function location(){
+       
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
-          x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-      }
-      
-      function showPosition(position) {
-          newLat= position.coords.latitude;
-         newLong= position.coords.longitude;
-        var data ={
-            lat1:"newLat",
-            lon2:"newLong"
-        };
-        localStorage.setItem('data', JSON.stringify(data));
-         $('#locationhere').text("Latitude = "+ newLat +" Longitude ="+newLong);
-      }
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+          }
 
-
-    function getlocolsotreage(){
-        var lat = localStorage.getItem("lat1");
-        var lon = localStorage.getItem("lon2");
-        if(lat==null)
-        {
-            getLocation();
+          function showPosition(position) {
+            Lat= position.coords.latitude;
+            Long= position.coords.longitude;
+            calucateOrDisplay();
         }
-        else
-        {
-            $('#locationhere').html("<p>welocme back !!<p>");
-            $('#locationhere').append("Latitude = "+ lat +" Longitude ="+lon);
-        }
+       
     }
 
     // DO NOT EDIT ANY CODE IN THIS FUNCTION DEFINTION
@@ -62,5 +72,7 @@ $(function () {
         return (R * c);
     }
 });
+
+
 
 
